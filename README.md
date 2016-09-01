@@ -1,6 +1,6 @@
 # Description
 This replication package contains the Stata code and raw spreadsheets
-needed to create the state-level and substate-level minimum wage dataset
+needed to create the state-level and sub-state-level minimum wage dataset
 described in Vaghul and Zipperer (2016).
 
 ## Contents of /code/
