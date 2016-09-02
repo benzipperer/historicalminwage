@@ -8,7 +8,7 @@ set more off
 clear all
 
 *SETTING GLOBAL DIRECTORIES
-* You will need to change the $home directory to an appropriate value.
+*You will need to change the $home directory to an appropriate value.
 global home "/home/bzipperer/projects/VZ_historicalminwage/"
 global raw "${home}rawdata/"
 global exports "${home}exports/"
@@ -250,7 +250,7 @@ save ${exports}VZ_state_annual.dta, replace
 *Exporting to excel spreadsheet format
 export excel using ${exports}VZ_state_annual.xlsx, replace firstrow(varlabels) datestring(%ty)
 
-* COMPRESS FILES FOR DISTRIBUTION
+*COMPRESS FILES FOR DISTRIBUTION
 * state - Stata
 !cp ${exports}VZ_state*.dta .
 zipfile VZ_state_annual.dta VZ_state_quarterly.dta VZ_state_monthly.dta VZ_state_daily.dta VZ_state_changes.dta, saving(VZ_state_stata.zip, replace)
