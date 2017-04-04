@@ -1,6 +1,6 @@
 *TITLE: SUBSTATE MINIMUM WAGES, Expanding the VZ Daily Minimum Wage Changes File
 *Date Created: 07.01.2016
-*Date Edited: 08.29.2016
+*Date Edited: 07.16.2016
 
 *Description: This .do file expands the VZ daily minimum wage changes by city/locality file.
 *IT REQUIRES the state-level minimum wage output of state_mw.do.
@@ -16,7 +16,7 @@ global exports "${home}exports/"
 global release "${home}release/"
 
 local substate "VZ_SubstateMinimumWage_Changes"
-local finaldate 01jul2016
+local finaldate 31mar2017
 
 
 *IMPORTING A CROSSWALK FOR FIPS CODES, STATE NAMES, AND STATE ABBREVIATIONS

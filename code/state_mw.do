@@ -1,6 +1,6 @@
 *TITLE: HISTORICAL MINIMUM WAGES, Expanding the VZ Daily Minimum Wage Changes File
 *Date Created: 12.04.2015
-*Date Edited: 08.29.2016
+*Date Edited: 07.05.2016
 
 *Description: This .do file expands the VZ daily minimum wage changes by state file and merges it with a daily federal minimum wage changes file.
 
@@ -8,18 +8,18 @@ set more off
 clear all
 
 *SETTING GLOBAL DIRECTORIES
-*You will need to change the $home directory to an appropriate value.
-global home "/home/bzipperer/projects/VZ_historicalminwage/"
-global raw "${home}rawdata/"
-global exports "${home}exports/"
-global release "${home}release/"
+* You will need to change the $home directory to an appropriate value.
+global home `c(pwd)'/../
+global raw ${home}rawdata/
+global exports ${home}exports/
+global release ${home}release/
 
-local federal "VZ_FederalMinimumWage_Changes"
-local states "VZ_StateMinimumWage_Changes"
+local federal VZ_FederalMinimumWage_Changes
+local states VZ_StateMinimumWage_Changes
 
+* these dates should reflect complete sample of data
 local begindate 01may1974
-local finaldate 01jul2016
-
+local finaldate 31mar2017
 
 *IMPORTING A CROSSWALK FOR FIPS CODES, STATE NAMES, AND STATE ABBREVIATIONS
 *Importing and "loading in" the crosswalk
@@ -146,7 +146,7 @@ replace mw_adj = fed_mw if mw == . & fed_mw ~= .
 drop mw
 rename mw_adj mw
 
-*Keeping overlapping data only (May 1, 1974 to July 1, 2016)
+*Keeping complete sample only
 keep if date >= td(`begindate') & date <= td(`finaldate')
 
 order statefips statename stateabb date fed_mw mw
@@ -250,7 +250,7 @@ save ${exports}VZ_state_annual.dta, replace
 *Exporting to excel spreadsheet format
 export excel using ${exports}VZ_state_annual.xlsx, replace firstrow(varlabels) datestring(%ty)
 
-*COMPRESS FILES FOR DISTRIBUTION
+* COMPRESS FILES FOR DISTRIBUTION
 * state - Stata
 !cp ${exports}VZ_state*.dta .
 zipfile VZ_state_annual.dta VZ_state_quarterly.dta VZ_state_monthly.dta VZ_state_daily.dta VZ_state_changes.dta, saving(VZ_state_stata.zip, replace)
