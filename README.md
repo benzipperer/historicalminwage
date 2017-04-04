@@ -1,5 +1,5 @@
 # State and sub-state historical minimum wage data
-The latest [release](/releases/latest) contains data through March 31, 2017, as
+The latest [release](https://github.com/benzipperer/historicalminwage/releases/latest) contains data through March 31, 2017, as
 Excel .xlsx spreadsheets or Stata .dta files, along with .pdf files of the
 sources for all of the historical changes.
 
