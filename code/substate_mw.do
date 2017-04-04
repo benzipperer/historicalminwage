@@ -1,8 +1,6 @@
-*TITLE: SUBSTATE MINIMUM WAGES, Expanding the VZ Daily Minimum Wage Changes File
-*Date Created: 07.01.2016
-*Date Edited: 07.16.2016
+*TITLE: SUBSTATE MINIMUM WAGES, Expanding the daily Minimum Wage Changes File
 
-*Description: This .do file expands the VZ daily minimum wage changes by city/locality file.
+*Description: This .do file expands the daily minimum wage changes by city/locality file.
 *IT REQUIRES the state-level minimum wage output of state_mw.do.
 
 set more off
@@ -15,7 +13,7 @@ global raw ${home}rawdata/
 global exports ${home}exports/
 global release ${home}release/
 
-local substate "VZ_SubstateMinimumWage_Changes"
+local substate "SubstateMinimumWage_Changes"
 local finaldate 31mar2017
 
 
@@ -33,7 +31,7 @@ tempfile crosswalk
 save `crosswalk'
 
 *PREPARING THE SUBSTATE MINIMUM WAGE CHANGES FILE
-*Loading in the VZ substate minimum wage data
+*Loading in the substate minimum wage data
 import excel using ${raw}`substate'.xlsx, clear firstrow
 
 *Creating a daily date variable
@@ -41,13 +39,12 @@ gen date = mdy(month,day,year)
 format date %td
 
 *note: Stata loads the minimum wage variables as float, so here, we are adjusting them to double to optimize Excel exports
-gen double mw = round(VZ_mw, .01)
-gen double mw_tipped = round(VZ_mw_tipped, .01)
-gen double mw_healthinsurance = round(VZ_mw_healthinsurance, .01)
-gen double mw_smallbusiness = round(VZ_mw_smallbusiness, .01)
-gen double mw_smallbusiness_mincomp = round(VZ_mw_smallbusiness_mincompensat, .01)
-gen double mw_hotel = round(VZ_mw_hotel, .01)
-drop VZ_mw*
+replace mw = round(mw, .01)
+replace mw_tipped = round(mw_tipped, .01)
+replace mw_healthinsurance = round(mw_healthinsurance, .01)
+replace mw_smallbusiness = round(mw_smallbusiness, .01)
+replace mw_smallbusiness_mincomp = round(mw_smallbusiness_mincompensat, .01)
+replace mw_hotel = round(mw_hotel, .01)
 
 *Labeling variables
 merge m:1 statefips using `crosswalk', nogen keep(3)
@@ -60,10 +57,10 @@ order statefips statename stateabb locality year month day date mw mw_* source s
 
 *Exporting to Stata .dta file
 sort locality date
-save ${exports}VZ_substate_changes.dta, replace
+save ${exports}mw_substate_changes.dta, replace
 
 *Exporting to excel spreadsheet format
-export excel using ${exports}VZ_substate_changes.xlsx, replace firstrow(varlabels) datestring(%td)
+export excel using ${exports}mw_substate_changes.xlsx, replace firstrow(varlabels) datestring(%td)
 
 * populate the first of the year for the initial mw, if it doesn't exist already
 preserve
@@ -77,7 +74,7 @@ restore
 sum year
 local minyear = r(min)
 preserve
-use ${exports}VZ_state_daily.dta, clear
+use ${exports}mw_state_daily.dta, clear
 keep if year(date) >= `minyear' & date <= td(`finaldate')
 joinby statefips using `localities'
 keep statefips statename stateabb locality date mw
@@ -108,7 +105,7 @@ keep if date <= td(`finaldate')
 merge 1:m statefips locality date using `statemw', assert(2 3) nogenerate
 replace mw = state_mw if mw == .
 replace mw = round(mw,0.01)
-gen abovestate = mw > state_mw
+gen abovestate = mw > round(state_mw,0.01)
 label var abovestate "Local > State min wage"
 
 
@@ -127,10 +124,10 @@ use `data', clear
 
 *Exporting to Stata .dta file
 sort locality date
-save ${exports}VZ_substate_daily.dta, replace
+save ${exports}mw_substate_daily.dta, replace
 
 *Exporting to excel spreadsheet format
-export excel using ${exports}VZ_substate_daily.xlsx, replace firstrow(varlabels) datestring(%td)
+export excel using ${exports}mw_substate_daily.xlsx, replace firstrow(varlabels) datestring(%td)
 
 *EXPORTING A MONTHLY DATASET WITH SUBSTATE MINIMUM WAGE
 use `data', clear
@@ -151,10 +148,10 @@ label var abovestate "Local > State min wage"
 
 *Exporting to Stata .dta file
 sort locality monthly_date
-save ${exports}VZ_substate_monthly.dta, replace
+save ${exports}mw_substate_monthly.dta, replace
 
 *Exporting to excel spreadsheet format
-export excel using ${exports}VZ_substate_monthly.xlsx, replace firstrow(varlabels) datestring(%tm)
+export excel using ${exports}mw_substate_monthly.xlsx, replace firstrow(varlabels) datestring(%tm)
 
 *EXPORTING A QUARTERLY DATASET WITH SUBSTATE MINIMUM WAGE
 use `data', clear
@@ -176,10 +173,10 @@ label var abovestate "Local > State min wage"
 
 *Exporting to Stata .dta file
 sort locality quarterly_date
-save ${exports}VZ_substate_quarterly.dta, replace
+save ${exports}mw_substate_quarterly.dta, replace
 
 *Exporting to excel spreadsheet format
-export excel using ${exports}VZ_substate_quarterly.xlsx, replace firstrow(varlabels) datestring(%tq)
+export excel using ${exports}mw_substate_quarterly.xlsx, replace firstrow(varlabels) datestring(%tq)
 
 *EXPORTING A YEARLY DATASET WITH STATE MINIMUM WAGES, FEDERAL MININUMUM WAGES, and VZ's FINAL MINIMUM WAGE (based on the higher level between the state and federal minimum wages)
 use `data', clear
@@ -200,28 +197,28 @@ label var abovestate "Local > State min wage"
 
 *Exporting to Stata .dta file
 sort locality year
-save ${exports}VZ_substate_annual.dta, replace
+save ${exports}mw_substate_annual.dta, replace
 
 *Exporting to excel spreadsheet format
-export excel using ${exports}VZ_substate_annual.xlsx, replace firstrow(varlabels) datestring(%ty)
+export excel using ${exports}mw_substate_annual.xlsx, replace firstrow(varlabels) datestring(%ty)
 
 * COMPRESS FILES FOR DISTRIBUTION
 * Substate - Stata
-!cp ${exports}VZ_substate*.dta .
-zipfile VZ_substate_annual.dta VZ_substate_quarterly.dta VZ_substate_monthly.dta VZ_substate_daily.dta VZ_substate_changes.dta, saving(VZ_substate_stata.zip, replace)
-!mv VZ_substate_stata.zip ${release}
-rm VZ_substate_annual.dta
-rm VZ_substate_quarterly.dta
-rm VZ_substate_monthly.dta
-rm VZ_substate_daily.dta
-rm VZ_substate_changes.dta
+!cp ${exports}mw_substate*.dta .
+zipfile mw_substate_annual.dta mw_substate_quarterly.dta mw_substate_monthly.dta mw_substate_daily.dta mw_substate_changes.dta, saving(mw_substate_stata.zip, replace)
+!mv mw_substate_stata.zip ${release}
+rm mw_substate_annual.dta
+rm mw_substate_quarterly.dta
+rm mw_substate_monthly.dta
+rm mw_substate_daily.dta
+rm mw_substate_changes.dta
 
 * Substate - Excel
-!cp ${exports}VZ_substate*.xlsx .
-zipfile VZ_substate_annual.xlsx VZ_substate_quarterly.xlsx VZ_substate_monthly.xlsx VZ_substate_daily.xlsx VZ_substate_changes.xlsx, saving(VZ_substate_excel.zip, replace)
-!mv VZ_substate_excel.zip ${release}
-rm VZ_substate_annual.xlsx
-rm VZ_substate_quarterly.xlsx
-rm VZ_substate_monthly.xlsx
-rm VZ_substate_daily.xlsx
-rm VZ_substate_changes.xlsx
+!cp ${exports}mw_substate*.xlsx .
+zipfile mw_substate_annual.xlsx mw_substate_quarterly.xlsx mw_substate_monthly.xlsx mw_substate_daily.xlsx mw_substate_changes.xlsx, saving(mw_substate_excel.zip, replace)
+!mv mw_substate_excel.zip ${release}
+rm mw_substate_annual.xlsx
+rm mw_substate_quarterly.xlsx
+rm mw_substate_monthly.xlsx
+rm mw_substate_daily.xlsx
+rm mw_substate_changes.xlsx

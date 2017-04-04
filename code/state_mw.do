@@ -1,8 +1,6 @@
-*TITLE: HISTORICAL MINIMUM WAGES, Expanding the VZ Daily Minimum Wage Changes File
-*Date Created: 12.04.2015
-*Date Edited: 07.05.2016
+*TITLE: HISTORICAL MINIMUM WAGES, Expanding the Daily Minimum Wage Changes File
 
-*Description: This .do file expands the VZ daily minimum wage changes by state file and merges it with a daily federal minimum wage changes file.
+*Description: This .do file expands the daily minimum wage changes by state file and merges it with a daily federal minimum wage changes file.
 
 set more off
 clear all
@@ -14,8 +12,8 @@ global raw ${home}rawdata/
 global exports ${home}exports/
 global release ${home}release/
 
-local federal VZ_FederalMinimumWage_Changes
-local states VZ_StateMinimumWage_Changes
+local federal FederalMinimumWage_Changes
+local states StateMinimumWage_Changes
 
 * these dates should reflect complete sample of data
 local begindate 01may1974
@@ -39,7 +37,7 @@ save `crosswalk'
 levelsof statefips, local(fips)
 
 *PREPARING THE FEDERAL MINIMUM WAGE CHANGES FILE
-*Loading in the VZ federal minimum wage data
+*Loading in the federal minimum wage data
 import excel using ${raw}`federal'.xlsx, clear firstrow
 rename Fed_mw fed_mw
 keep year month day fed_mw source
@@ -56,10 +54,10 @@ order year month day date fed_mw source
 
 *Exporting to Stata .dta file
 sort date
-save ${exports}VZ_federal_changes.dta, replace
+save ${exports}mw_federal_changes.dta, replace
 
 *Exporting to excel spreadsheet format
-export excel using ${exports}VZ_federal_changes.xlsx, replace firstrow(varlabels) datestring(%td)
+export excel using ${exports}mw_federal_changes.xlsx, replace firstrow(varlabels) datestring(%td)
 
 *Expanding the date variable
 tsset date
@@ -94,17 +92,16 @@ save `fedmw'
 
 
 *PREPARING THE STATE MINIMUM WAGE CHANGES FILE
-*Loading in the VZ State by State minimum wage data
+*Loading in the State by State minimum wage data
 import excel using ${raw}`states'.xlsx, clear firstrow
 
 *Creating a daily date variable
 gen date = mdy(month,day,year)
 format date %td
 
-gen double mw = round(VZ_mw, .01)
-gen double mw_healthinsurance = round(VZ_mw_healthinsurance, .01)
-gen double mw_smallbusiness = round(VZ_mw_smallbusiness, .01)
-drop VZ_mw*
+replace mw = round(mw, .01)
+replace mw_healthinsurance = round(mw_healthinsurance, .01)
+replace mw_smallbusiness = round(mw_smallbusiness, .01)
 
 merge m:1 statefips using `crosswalk', nogen assert(3)
 
@@ -114,10 +111,10 @@ label var statename "State"
 
 *Exporting to Stata .dta file
 sort stateabb date
-save ${exports}VZ_state_changes.dta, replace
+save ${exports}mw_state_changes.dta, replace
 
 *Exporting to excel spreadsheet format
-export excel using ${exports}VZ_state_changes.xlsx, replace firstrow(varlabels) datestring(%td)
+export excel using ${exports}mw_state_changes.xlsx, replace firstrow(varlabels) datestring(%td)
 
 *Expanding the date variable
 tsset statefips date
@@ -157,16 +154,16 @@ notes mw: The mw variable represents the higher rate between the state and feder
 tempfile data
 save `data'
 
-*EXPORTING A DAILY DATASET WITH STATE MINIMUM WAGES, FEDERAL MININUMUM WAGES, and VZ's FINAL MINIMUM WAGE (based on the higher level between the state and federal minimum wages)
+*EXPORTING A DAILY DATASET WITH STATE MINIMUM WAGES, FEDERAL MININUMUM WAGES, and FINAL MINIMUM WAGE (based on the higher level between the state and federal minimum wages)
 use `data', clear
 *Exporting to Stata .dta file
 sort stateabb date
-save ${exports}VZ_state_daily.dta, replace
+save ${exports}mw_state_daily.dta, replace
 
 *Exporting to excel spreadsheet format
-export excel using ${exports}VZ_state_daily.xlsx, replace firstrow(varlabels) datestring(%td)
+export excel using ${exports}mw_state_daily.xlsx, replace firstrow(varlabels) datestring(%td)
 
-*EXPORTING A MONTHLY DATASET WITH STATE MINIMUM WAGES, FEDERAL MININUMUM WAGES, and VZ's FINAL MINIMUM WAGE (based on the higher level between the state and federal minimum wages)
+*EXPORTING A MONTHLY DATASET WITH STATE MINIMUM WAGES, FEDERAL MININUMUM WAGES, and FINAL MINIMUM WAGE (based on the higher level between the state and federal minimum wages)
 use `data', clear
 
 *Creating a monthly date variables
@@ -189,12 +186,12 @@ label var max_mw "Monthly State Maximum"
 
 *Exporting to Stata .dta file
 sort stateabb monthly_date
-save ${exports}VZ_state_monthly.dta, replace
+save ${exports}mw_state_monthly.dta, replace
 
 *Exporting to excel spreadsheet format
-export excel using ${exports}VZ_state_monthly.xlsx, replace firstrow(varlabels) datestring(%tm)
+export excel using ${exports}mw_state_monthly.xlsx, replace firstrow(varlabels) datestring(%tm)
 
-*EXPORTING A QUARTERLY DATASET WITH STATE MINIMUM WAGES, FEDERAL MININUMUM WAGES, and VZ's FINAL MINIMUM WAGE (based on the higher level between the state and federal minimum wages)
+*EXPORTING A QUARTERLY DATASET WITH STATE MINIMUM WAGES, FEDERAL MININUMUM WAGES, and FINAL MINIMUM WAGE (based on the higher level between the state and federal minimum wages)
 use `data', clear
 
 *Creating a quarterly date variables
@@ -217,12 +214,12 @@ label var max_mw "Quarterly State Maximum"
 
 *Exporting to Stata .dta file
 sort stateabb quarterly_date
-save ${exports}VZ_state_quarterly.dta, replace
+save ${exports}mw_state_quarterly.dta, replace
 
 *Exporting to excel spreadsheet format
-export excel using ${exports}VZ_state_quarterly.xlsx, replace firstrow(varlabels) datestring(%tq)
+export excel using ${exports}mw_state_quarterly.xlsx, replace firstrow(varlabels) datestring(%tq)
 
-*EXPORTING A YEARLY DATASET WITH STATE MINIMUM WAGES, FEDERAL MININUMUM WAGES, and VZ's FINAL MINIMUM WAGE (based on the higher level between the state and federal minimum wages)
+*EXPORTING A YEARLY DATASET WITH STATE MINIMUM WAGES, FEDERAL MININUMUM WAGES, and FINAL MINIMUM WAGE (based on the higher level between the state and federal minimum wages)
 use `data', clear
 
 *Creating a yearly date variables
@@ -245,28 +242,28 @@ label var max_mw "Annual State Maximum"
 
 *Exporting to Stata .dta file
 sort stateabb year
-save ${exports}VZ_state_annual.dta, replace
+save ${exports}mw_state_annual.dta, replace
 
 *Exporting to excel spreadsheet format
-export excel using ${exports}VZ_state_annual.xlsx, replace firstrow(varlabels) datestring(%ty)
+export excel using ${exports}mw_state_annual.xlsx, replace firstrow(varlabels) datestring(%ty)
 
 * COMPRESS FILES FOR DISTRIBUTION
 * state - Stata
-!cp ${exports}VZ_state*.dta .
-zipfile VZ_state_annual.dta VZ_state_quarterly.dta VZ_state_monthly.dta VZ_state_daily.dta VZ_state_changes.dta, saving(VZ_state_stata.zip, replace)
-!mv VZ_state_stata.zip ${release}
-rm VZ_state_annual.dta
-rm VZ_state_quarterly.dta
-rm VZ_state_monthly.dta
-rm VZ_state_daily.dta
-rm VZ_state_changes.dta
+!cp ${exports}mw_state*.dta .
+zipfile mw_state_annual.dta mw_state_quarterly.dta mw_state_monthly.dta mw_state_daily.dta mw_state_changes.dta, saving(mw_state_stata.zip, replace)
+!mv mw_state_stata.zip ${release}
+rm mw_state_annual.dta
+rm mw_state_quarterly.dta
+rm mw_state_monthly.dta
+rm mw_state_daily.dta
+rm mw_state_changes.dta
 
 * state - Excel
-!cp ${exports}VZ_state*.xlsx .
-zipfile VZ_state_annual.xlsx VZ_state_quarterly.xlsx VZ_state_monthly.xlsx VZ_state_daily.xlsx VZ_state_changes.xlsx, saving(VZ_state_excel.zip, replace)
-!mv VZ_state_excel.zip ${release}
-rm VZ_state_annual.xlsx
-rm VZ_state_quarterly.xlsx
-rm VZ_state_monthly.xlsx
-rm VZ_state_daily.xlsx
-rm VZ_state_changes.xlsx
+!cp ${exports}mw_state*.xlsx .
+zipfile mw_state_annual.xlsx mw_state_quarterly.xlsx mw_state_monthly.xlsx mw_state_daily.xlsx mw_state_changes.xlsx, saving(mw_state_excel.zip, replace)
+!mv mw_state_excel.zip ${release}
+rm mw_state_annual.xlsx
+rm mw_state_quarterly.xlsx
+rm mw_state_monthly.xlsx
+rm mw_state_daily.xlsx
+rm mw_state_changes.xlsx
