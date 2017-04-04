@@ -10,10 +10,10 @@ clear all
 
 *SETTING GLOBAL DIRECTORIES
 * You will need to change the $home directory to an appropriate value.
-global home "/home/bzipperer/projects/VZ_historicalminwage/"
-global raw "${home}rawdata/"
-global exports "${home}exports/"
-global release "${home}release/"
+global home `c(pwd)'/../
+global raw ${home}rawdata/
+global exports ${home}exports/
+global release ${home}release/
 
 local substate "VZ_SubstateMinimumWage_Changes"
 local finaldate 31mar2017
