@@ -1,7 +1,14 @@
 # State and sub-state historical minimum wage data
-The latest [release](https://github.com/benzipperer/historicalminwage/releases/latest) contains data through March 31, 2017, as
-Excel .xlsx spreadsheets or Stata .dta files, along with .pdf files of the
-sources for all of the historical changes.
+The repository creates daily, monthly, quarterly, and annual panel
+datasets of historical state and sub-state minimum wages.
+
+## Latest data
+Do you just want the data? Go here for the latest
+[release](https://github.com/benzipperer/historicalminwage/releases/latest)
+containing data through March 31, 2017.
+
+The data is available as Excel .xlsx spreadsheets or Stata .dta files,
+along with .pdf files of the sources for all of the historical changes.
 
 ## Documentation
 This replication package contains the Stata code and raw
@@ -11,8 +18,8 @@ minimum wage datasets.
 The original release of this data is described in Vaghul and Zipperer (2016),
 available [here](http://equitablegrowth.org/working-papers/historical-state-and-sub-state-minimum-wage-data/).
 
-To replicate the data, clone this repository, set your Stata working directory 
-to the code/ directory, and run state_mw.do and then substate_mw.do. Running 
+To replicate the data, clone this repository, set your Stata working directory
+to the code/ directory, and run state_mw.do and then substate_mw.do. Running
 the code will update and replace the contents of the exports/ and release/ folders.
 
 ## File contents
