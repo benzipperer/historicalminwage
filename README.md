@@ -11,12 +11,13 @@ minimum wage datasets.
 The original release of this data is described in Vaghul and Zipperer (2016),
 available [here](http://equitablegrowth.org/working-papers/historical-state-and-sub-state-minimum-wage-data/).
 
+To replicate the data, clone this repository, set your Stata working directory 
+to the code/ directory, and run state_mw.do and then substate_mw.do. Running 
+the code will update and replace the contents of the exports/ and release/ folders.
+
 ## File contents
 ### code/
-Run the following do-files to create the state and substate-level extracts.
-Your working directory should contain the do-files and mirror the directory
-structure in the global macros at the top of the do-files. Running the code
-will update and replace the contents of the exports/ and release/ folders.
+These do-files create all of the datasets.
 
 * state_mw.do - creates a state-level data
 * substate_mw.do - creates substate-level data (requires output of state_mw.do)
