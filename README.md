@@ -3,9 +3,9 @@ The repository creates daily, monthly, quarterly, and annual panel
 datasets of historical state and sub-state minimum wages.
 
 ## Latest data
-Do you just want the data? Go here for the latest
-[release](https://github.com/benzipperer/historicalminwage/releases/latest)
-containing data through March 31, 2017.
+Do you just want the data? Go
+[here](https://github.com/benzipperer/historicalminwage/releases/latest)
+for the latest release containing data through March 31, 2017.
 
 The data is available as Excel .xlsx spreadsheets or Stata .dta files,
 along with .pdf files of the sources for all of the historical changes.
