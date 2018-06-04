@@ -14,7 +14,7 @@ global exports ${home}exports/
 global release ${home}release/
 
 local substate "SubstateMinimumWage_Changes"
-local finaldate 31mar2017
+local finaldate 31dec2018
 
 
 *IMPORTING A CROSSWALK FOR FIPS CODES, STATE NAMES, AND STATE ABBREVIATIONS
@@ -84,7 +84,7 @@ save `statemw'
 restore
 
 *Creating a "non-string" counter variable based on the locality so that we can use the tsfill function
-encode locality, gen(locality_temp)
+egen locality_temp = group(statefips locality)
 
 *Expanding the date variable
 tsset locality_temp date
