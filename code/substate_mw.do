@@ -14,7 +14,7 @@ global exports ${home}exports/
 global release ${home}release/
 
 local substate "SubstateMinimumWage_Changes"
-local finaldate 31mar2017
+local finaldate 31dec2019
 
 
 *IMPORTING A CROSSWALK FOR FIPS CODES, STATE NAMES, AND STATE ABBREVIATIONS
@@ -57,6 +57,7 @@ order statefips statename stateabb locality year month day date mw mw_* source s
 
 *Exporting to Stata .dta file
 sort locality date
+compress
 save ${exports}mw_substate_changes.dta, replace
 
 *Exporting to excel spreadsheet format
@@ -84,7 +85,7 @@ save `statemw'
 restore
 
 *Creating a "non-string" counter variable based on the locality so that we can use the tsfill function
-encode locality, gen(locality_temp)
+egen locality_temp = group(statefips locality)
 
 *Expanding the date variable
 tsset locality_temp date
@@ -124,6 +125,7 @@ use `data', clear
 
 *Exporting to Stata .dta file
 sort locality date
+compress
 save ${exports}mw_substate_daily.dta, replace
 
 *Exporting to excel spreadsheet format
@@ -148,6 +150,7 @@ label var abovestate "Local > State min wage"
 
 *Exporting to Stata .dta file
 sort locality monthly_date
+compress
 save ${exports}mw_substate_monthly.dta, replace
 
 *Exporting to excel spreadsheet format
@@ -173,6 +176,7 @@ label var abovestate "Local > State min wage"
 
 *Exporting to Stata .dta file
 sort locality quarterly_date
+compress
 save ${exports}mw_substate_quarterly.dta, replace
 
 *Exporting to excel spreadsheet format
@@ -197,6 +201,7 @@ label var abovestate "Local > State min wage"
 
 *Exporting to Stata .dta file
 sort locality year
+compress
 save ${exports}mw_substate_annual.dta, replace
 
 *Exporting to excel spreadsheet format

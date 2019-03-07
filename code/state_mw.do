@@ -17,7 +17,7 @@ local states StateMinimumWage_Changes
 
 * these dates should reflect complete sample of data
 local begindate 01may1974
-local finaldate 31mar2017
+local finaldate 31dec2019
 
 *IMPORTING A CROSSWALK FOR FIPS CODES, STATE NAMES, AND STATE ABBREVIATIONS
 *Importing and "loading in" the crosswalk
@@ -154,10 +154,11 @@ notes mw: The mw variable represents the higher rate between the state and feder
 tempfile data
 save `data'
 
-*EXPORTING A DAILY DATASET WITH STATE MINIMUM WAGES, FEDERAL MININUMUM WAGES, and FINAL MINIMUM WAGE (based on the higher level between the state and federal minimum wages)
+*EXPORTING A DAILY DATASET WITH STATE MINIMUM WAGES, FEDERAL MININUM WAGES, and FINAL MINIMUM WAGE (based on the higher level between the state and federal minimum wages)
 use `data', clear
 *Exporting to Stata .dta file
 sort stateabb date
+compress
 save ${exports}mw_state_daily.dta, replace
 
 *Exporting to excel spreadsheet format
@@ -186,6 +187,7 @@ label var max_mw "Monthly State Maximum"
 
 *Exporting to Stata .dta file
 sort stateabb monthly_date
+compress
 save ${exports}mw_state_monthly.dta, replace
 
 *Exporting to excel spreadsheet format
@@ -214,6 +216,7 @@ label var max_mw "Quarterly State Maximum"
 
 *Exporting to Stata .dta file
 sort stateabb quarterly_date
+compress
 save ${exports}mw_state_quarterly.dta, replace
 
 *Exporting to excel spreadsheet format
@@ -242,6 +245,7 @@ label var max_mw "Annual State Maximum"
 
 *Exporting to Stata .dta file
 sort stateabb year
+compress
 save ${exports}mw_state_annual.dta, replace
 
 *Exporting to excel spreadsheet format
