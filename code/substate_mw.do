@@ -57,6 +57,7 @@ order statefips statename stateabb locality year month day date mw mw_* source s
 
 *Exporting to Stata .dta file
 sort locality date
+compress
 save ${exports}mw_substate_changes.dta, replace
 
 *Exporting to excel spreadsheet format
@@ -124,6 +125,7 @@ use `data', clear
 
 *Exporting to Stata .dta file
 sort locality date
+compress
 save ${exports}mw_substate_daily.dta, replace
 
 *Exporting to excel spreadsheet format
@@ -148,6 +150,7 @@ label var abovestate "Local > State min wage"
 
 *Exporting to Stata .dta file
 sort locality monthly_date
+compress
 save ${exports}mw_substate_monthly.dta, replace
 
 *Exporting to excel spreadsheet format
@@ -173,6 +176,7 @@ label var abovestate "Local > State min wage"
 
 *Exporting to Stata .dta file
 sort locality quarterly_date
+compress
 save ${exports}mw_substate_quarterly.dta, replace
 
 *Exporting to excel spreadsheet format
@@ -197,6 +201,7 @@ label var abovestate "Local > State min wage"
 
 *Exporting to Stata .dta file
 sort locality year
+compress
 save ${exports}mw_substate_annual.dta, replace
 
 *Exporting to excel spreadsheet format
