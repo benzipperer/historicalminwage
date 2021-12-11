@@ -14,7 +14,7 @@ global exports ${home}exports/
 global release ${home}release/
 
 local substate "SubstateMinimumWage_Changes"
-local finaldate 31dec2019
+local finaldate 31dec2021
 
 
 *IMPORTING A CROSSWALK FOR FIPS CODES, STATE NAMES, AND STATE ABBREVIATIONS

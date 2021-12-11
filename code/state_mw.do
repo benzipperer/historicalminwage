@@ -17,7 +17,7 @@ local states StateMinimumWage_Changes
 
 * these dates should reflect complete sample of data
 local begindate 01may1974
-local finaldate 31dec2020
+local finaldate 31dec2021
 
 *IMPORTING A CROSSWALK FOR FIPS CODES, STATE NAMES, AND STATE ABBREVIATIONS
 *Importing and "loading in" the crosswalk
