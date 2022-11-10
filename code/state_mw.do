@@ -17,7 +17,7 @@ local states StateMinimumWage_Changes
 
 * these dates should reflect complete sample of data
 local begindate 01may1974
-local finaldate 31dec2021
+local finaldate 30jun2022
 
 *IMPORTING A CROSSWALK FOR FIPS CODES, STATE NAMES, AND STATE ABBREVIATIONS
 *Importing and "loading in" the crosswalk
@@ -103,7 +103,8 @@ replace mw = round(mw, .01)
 replace mw_healthinsurance = round(mw_healthinsurance, .01)
 replace mw_smallbusiness = round(mw_smallbusiness, .01)
 
-merge m:1 statefips using `crosswalk', nogen assert(3)
+merge m:1 statefips using `crosswalk'/*, nogen assert(3)*/
+stop 
 
 order statefips statename stateabb year month day date mw* source source_2 source_notes
 label var statefips "State FIPS Code"
@@ -189,6 +190,8 @@ label var max_mw "Monthly State Maximum"
 sort stateabb monthly_date
 compress
 save ${exports}mw_state_monthly.dta, replace
+
+stop 
 
 *Exporting to excel spreadsheet format
 export excel using ${exports}mw_state_monthly.xlsx, replace firstrow(varlabels) datestring(%tm)
