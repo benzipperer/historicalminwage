@@ -14,7 +14,7 @@ global exports ${home}exports/
 global release ${home}release/
 
 local substate "SubstateMinimumWage_Changes"
-local finaldate 31dec2021
+local finaldate 31dec2022
 
 
 *IMPORTING A CROSSWALK FOR FIPS CODES, STATE NAMES, AND STATE ABBREVIATIONS
@@ -54,6 +54,7 @@ label var stateabb "State Abbreviation"
 label var locality "City/County"
 label var mw "Minimum Wage"
 order statefips statename stateabb locality year month day date mw mw_* source source_2 source_notes
+keep statefips statename stateabb locality year month day date mw mw_* source source_2 source_notes
 
 *Exporting to Stata .dta file
 sort locality date
