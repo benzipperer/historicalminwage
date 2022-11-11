@@ -17,7 +17,7 @@ local states StateMinimumWage_Changes
 
 * these dates should reflect complete sample of data
 local begindate 01may1974
-local finaldate 31dec2021
+local finaldate 31dec2022
 
 *IMPORTING A CROSSWALK FOR FIPS CODES, STATE NAMES, AND STATE ABBREVIATIONS
 *Importing and "loading in" the crosswalk
@@ -94,6 +94,7 @@ save `fedmw'
 *PREPARING THE STATE MINIMUM WAGE CHANGES FILE
 *Loading in the State by State minimum wage data
 import excel using ${raw}`states'.xlsx, clear firstrow
+keep statefips statename year month day mw* source*
 
 *Creating a daily date variable
 gen date = mdy(month,day,year)
@@ -103,7 +104,7 @@ replace mw = round(mw, .01)
 replace mw_healthinsurance = round(mw_healthinsurance, .01)
 replace mw_smallbusiness = round(mw_smallbusiness, .01)
 
-merge m:1 statefips using `crosswalk', nogen assert(3)
+merge m:1 statefips using `crosswalk', nogen assert(3) 
 
 order statefips statename stateabb year month day date mw* source source_2 source_notes
 label var statefips "State FIPS Code"
@@ -162,7 +163,7 @@ compress
 save ${exports}mw_state_daily.dta, replace
 
 *Exporting to excel spreadsheet format
-export excel using ${exports}mw_state_daily.xlsx, replace firstrow(varlabels) datestring(%td)
+*export excel using ${exports}mw_state_daily.xlsx, replace firstrow(varlabels) datestring(%td)
 
 *EXPORTING A MONTHLY DATASET WITH STATE MINIMUM WAGES, FEDERAL MININUMUM WAGES, and FINAL MINIMUM WAGE (based on the higher level between the state and federal minimum wages)
 use `data', clear
@@ -188,7 +189,7 @@ label var max_mw "Monthly State Maximum"
 *Exporting to Stata .dta file
 sort stateabb monthly_date
 compress
-save ${exports}mw_state_monthly.dta, replace
+save ${exports}mw_state_monthly.dta, replace 
 
 *Exporting to excel spreadsheet format
 export excel using ${exports}mw_state_monthly.xlsx, replace firstrow(varlabels) datestring(%tm)
@@ -264,10 +265,9 @@ rm mw_state_changes.dta
 
 * state - Excel
 !cp ${exports}mw_state*.xlsx .
-zipfile mw_state_annual.xlsx mw_state_quarterly.xlsx mw_state_monthly.xlsx mw_state_daily.xlsx mw_state_changes.xlsx, saving(mw_state_excel.zip, replace)
+zipfile mw_state_annual.xlsx mw_state_quarterly.xlsx mw_state_monthly.xlsx mw_state_changes.xlsx, saving(mw_state_excel.zip, replace)
 !mv mw_state_excel.zip ${release}
 rm mw_state_annual.xlsx
 rm mw_state_quarterly.xlsx
 rm mw_state_monthly.xlsx
-rm mw_state_daily.xlsx
 rm mw_state_changes.xlsx
