@@ -1,0 +1,12 @@
+This repository uses two licenses.
+
+Code: The Stata code in code/ is licensed under the MIT License.
+See LICENSE-MIT.
+
+Data: The data files (.xlsx and .dta) in rawdata/, exports/, and release/
+are dedicated to the public domain under CC0 1.0 Universal. See LICENSE-CC0.
+You are not legally required to give credit, but please cite
+Vaghul and Zipperer (2016) when you use this data.
+
+Source documents: The .pdf source files are not covered by either license
+and may be subject to third-party rights.
